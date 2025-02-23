@@ -1,0 +1,43 @@
+{
+  "name": "gql-backend-starter",
+  "version": "1.0.0",
+  "description": "GraphQL Backend starter template",
+  "module": "src/server.ts",
+  "repository": "https://github.com/BigWhaleLabs/gql-backend-starter",
+  "author": "BigWhaleLabs <gql.starter@bwl.gg>",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun src/server.ts",
+    "build-ts": "tsc --skipLibCheck --noEmit",
+    "lint": "bun --bun eslint",
+    "prisma-generate": "prisma format && prisma generate",
+    "prisma-migrate": "prisma migrate dev && prisma migrate deploy"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/jsonwebtoken": "^9.0.9",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "jiti": "^2.4.2",
+    "typescript-eslint": "^8.24.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "core-js": "^3.40.0",
+    "dotenv": "^16.4.7",
+    "envalid": "^8.0.0",
+    "graphql": "^16.10.0",
+    "graphql-scalars": "^1.24.1",
+    "graphql-yoga": "^5.12.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.18.0",
+    "reflect-metadata": "^0.2.2",
+    "type-graphql": "^2.0.0-rc.2",
+    "typegraphql-prisma": "^0.28.0"
+  }
+}

@@ -1,0 +1,52 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "relationJoins"]
+}
+
+generator typegraphql {
+  provider        = "typegraphql-prisma"
+  emitOnly        = ["enums", "models", "relationResolvers"]
+  simpleResolvers = true
+  useSimpleInputs = true
+  emitIdAsIDType  = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES")
+}
+
+model User {
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  id           String      @id @default(cuid())
+  /// @TypeGraphQL.omit(output: true, input: true)
+  passwordHash String      @unique
+  /// @TypeGraphQL.omit(output: true, input: true)
+  authTokens   AuthToken[]
+  posts        Post[]
+}
+
+model AuthToken {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  token     String
+  userAgent String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@index([token])
+}
+
+model Post {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+
+  @@index([authorId])
+}

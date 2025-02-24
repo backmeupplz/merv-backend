@@ -2,7 +2,7 @@
 cmds = ["bun install"]
 
 [phases.build]
-cmd = "bun prisma migrate status && (bun prisma-migrate || true)"
+cmd = "bun prisma migrate status || bun prisma-migrate"
 
 [start]
 cmd = "bun start"

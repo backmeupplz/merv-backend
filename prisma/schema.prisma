@@ -17,21 +17,44 @@ datasource db {
 }
 
 model User {
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  id           String      @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  username  String   @unique
+  passId    Int
+  pfpUrl    String?
+
+  // Tokens
   /// @TypeGraphQL.omit(output: true, input: true)
-  passwordHash String      @unique
+  authTokens                  AuthToken[]
   /// @TypeGraphQL.omit(output: true, input: true)
-  authTokens   AuthToken[]
-  posts        Post[]
+  farcasterNotificationTokens FarcasterNotificationToken[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  apiKeys                     ApiKey[]
+
+  // Privy fields
+  privyUserId String @unique
+  ethAddress  String @unique
+  fid         Int    @unique
+}
+
+model FarcasterNotificationToken {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  token String @unique
+  url   String
 }
 
 model AuthToken {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   id        String   @id @default(cuid())
-  token     String
+  token     String /// @zod.custom.use(z.string().refine(validator.isJWT))
   userAgent String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
@@ -39,14 +62,15 @@ model AuthToken {
   @@index([token])
 }
 
-model Post {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  String
+model ApiKey {
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  lastUsedAt DateTime?
+  id         String    @id @default(uuid())
+  token      String /// @zod.custom.use(z.string().refine(validator.isJWT))
+  userAgent  String
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String
 
-  @@index([authorId])
+  @@index([token])
 }

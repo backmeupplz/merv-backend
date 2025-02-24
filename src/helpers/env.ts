@@ -10,4 +10,6 @@ export default cleanEnv(process.env, {
   PORT: num({ default: 1337 }),
   POSTGRES: str(),
   JWT_SECRET: str(),
+  PRIVY_APP_ID: str(),
+  PRIVY_APP_SECRET: str(),
 })

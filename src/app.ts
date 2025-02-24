@@ -8,12 +8,12 @@ import {
 } from '@graphql-tools/utils'
 import { GraphQLIncludeDirective } from 'graphql'
 import { createYoga, type YogaInitialContext } from 'graphql-yoga'
+import env from 'helpers/env'
 import { verifyAuthToken } from 'helpers/jwt.js'
 import prismaClient from 'helpers/prismaClient.js'
 import type Context from 'models/Context.js'
 import LoginResolver from 'resolvers/LoginResolver.js'
-import PostsResolver from 'resolvers/PostsResolver.js'
-import UserModelResolver from 'resolvers/UserModelResolver.js'
+import UserResolver from 'resolvers/UserResolver.js'
 import { buildSchema } from 'type-graphql'
 
 const schema = await buildSchema({
@@ -25,13 +25,7 @@ const schema = await buildSchema({
     GraphQLDeferDirective,
     GraphQLStreamDirective,
   ],
-  resolvers: [
-    ...relationResolvers,
-    LoginResolver,
-    UserModelResolver,
-    PostsResolver,
-    UserModelResolver,
-  ],
+  resolvers: [...relationResolvers, LoginResolver, UserResolver],
   validate: true,
 })
 
@@ -80,6 +74,7 @@ const yoga = createYoga({
 const server = Bun.serve({
   fetch: yoga,
   reusePort: true,
+  port: env.PORT,
 })
 
 console.info(

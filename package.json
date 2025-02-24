@@ -1,10 +1,10 @@
 {
-  "name": "gql-backend-starter",
+  "name": "merv-backend",
   "version": "1.0.0",
-  "description": "GraphQL Backend starter template",
+  "description": "Merv backend",
   "module": "src/server.ts",
-  "repository": "https://github.com/BigWhaleLabs/gql-backend-starter",
-  "author": "BigWhaleLabs <gql.starter@bwl.gg>",
+  "repository": "https://github.com/backmeupplz/merv-backend",
+  "author": "Nikita Kolmogorov <backmeupplz@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "bun src/server.ts",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
+    "@privy-io/server-auth": "^1.18.9",
     "core-js": "^3.40.0",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",

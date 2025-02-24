@@ -1,8 +1,5 @@
 [phases.install]
 cmds = ["bun install"]
 
-[phases.build]
-cmd = "bun prisma migrate status || bun prisma-migrate"
-
 [start]
-cmd = "bun start"
+cmd = "bun prisma-migrate-if-needed && bun start"

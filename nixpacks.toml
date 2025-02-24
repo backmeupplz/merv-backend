@@ -2,4 +2,4 @@
 cmds = ["bun install"]
 
 [start]
-cmd = "bun apply-migrations && bun start"
+cmd = "bun prisma-migrate && bun start"

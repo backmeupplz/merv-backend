@@ -1,5 +1,6 @@
 [phases.install]
 cmds = ["bun install"]
+nixLibs = ["openssl"]
 
 [start]
 cmd = "bun prisma-migrate-if-needed && bun start"

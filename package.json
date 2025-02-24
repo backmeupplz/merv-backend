@@ -39,6 +39,7 @@
     "prisma": "^5.18.0",
     "reflect-metadata": "^0.2.2",
     "type-graphql": "^2.0.0-rc.2",
-    "typegraphql-prisma": "^0.28.0"
+    "typegraphql-prisma": "^0.28.0",
+    "viem": "^2.23.5"
   }
 }

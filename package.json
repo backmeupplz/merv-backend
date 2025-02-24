@@ -11,7 +11,7 @@
     "build-ts": "tsc --skipLibCheck --noEmit",
     "lint": "bun --bun eslint",
     "prisma-generate": "prisma format && prisma generate",
-    "prisma-migrate": "prisma migrate dev && prisma migrate deploy"
+    "prisma-migrate": "prisma migrate deploy"
   },
   "devDependencies": {
     "@types/bun": "latest",

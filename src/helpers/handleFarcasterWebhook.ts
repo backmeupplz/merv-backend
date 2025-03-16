@@ -10,7 +10,7 @@ export default async function handleFarcasterWebhook(req: Request) {
   try {
     const body = await req.json()
     const verifyAppKeyWithHub = createVerifyAppKeyWithHub(
-      'https://hub.battle.fun',
+      'https://hub.merv.fun',
     )
     const { event, fid } = await parseWebhookEvent(body, verifyAppKeyWithHub)
     const user = await prismaClient.user.findFirst({

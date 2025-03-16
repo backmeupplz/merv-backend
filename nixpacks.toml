@@ -2,5 +2,9 @@
 cmds = ["bun install"]
 nixLibs = ["openssl"]
 
+[phases.setup]
+nixPkgs = ["...","python311"]
+aptPkgs = ["...", "openssh-client", "build-essential"]
+
 [start]
 cmd = "bun prisma-migrate-if-needed && bun start"

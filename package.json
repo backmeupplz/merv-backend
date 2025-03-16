@@ -28,11 +28,13 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@farcaster/frame-node": "^0.0.18",
     "@prisma/client": "^5.18.0",
     "@privy-io/server-auth": "^1.18.9",
     "core-js": "^3.40.0",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
+    "grammy": "^1.35.0",
     "graphql": "^16.10.0",
     "graphql-scalars": "^1.24.1",
     "graphql-yoga": "^5.12.0",

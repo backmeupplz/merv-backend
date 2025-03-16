@@ -12,4 +12,5 @@ export default cleanEnv(process.env, {
   JWT_SECRET: str(),
   PRIVY_APP_ID: str(),
   PRIVY_APP_SECRET: str(),
+  TELEGRAM_BOT_TOKEN: str(),
 })

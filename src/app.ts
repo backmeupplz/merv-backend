@@ -9,6 +9,7 @@ import {
 import { GraphQLIncludeDirective } from 'graphql'
 import { createYoga, type YogaInitialContext } from 'graphql-yoga'
 import env from 'helpers/env'
+import handleFarcasterWebhook from 'helpers/handleFarcasterWebhook'
 import { verifyAuthToken } from 'helpers/jwt.js'
 import prismaClient from 'helpers/prismaClient.js'
 import type Context from 'models/Context.js'
@@ -72,7 +73,17 @@ const yoga = createYoga({
 })
 
 const server = Bun.serve({
-  fetch: yoga,
+  async fetch(req) {
+    const url = new URL(req.url)
+    const path = url.pathname
+
+    if (path === '/farcaster-webhook' && req.method === 'POST') {
+      return handleFarcasterWebhook(req)
+    }
+
+    // Default to GraphQL handling
+    return yoga.fetch(req)
+  },
   reusePort: true,
   port: env.PORT,
 })

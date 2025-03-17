@@ -31,6 +31,7 @@
     "@farcaster/frame-node": "^0.0.18",
     "@prisma/client": "^5.18.0",
     "@privy-io/server-auth": "^1.18.9",
+    "class-validator": "^0.14.1",
     "core-js": "^3.40.0",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",

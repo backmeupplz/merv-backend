@@ -55,7 +55,7 @@ export default class LoginResolver {
       const authToken = await prisma.authToken.create({
         data: {
           token: getAuthToken(user),
-          userAgent: req.headers['user-agent'] || 'Unknown',
+          userAgent: req?.headers['user-agent'] || 'Unknown',
           userId: user.id,
         },
       })
@@ -111,7 +111,7 @@ export default class LoginResolver {
     const authToken = await prisma.authToken.create({
       data: {
         token: getAuthToken(newUser),
-        userAgent: req.headers['user-agent'] || 'Unknown',
+        userAgent: req?.headers['user-agent'] || 'Unknown',
         userId: newUser.id,
       },
     })

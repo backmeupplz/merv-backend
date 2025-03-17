@@ -33,9 +33,9 @@ model User {
   apiKeys                     ApiKey[]
 
   // Privy fields
-  privyUserId String @unique
-  ethAddress  String @unique
-  fid         Int    @unique
+  privyUserId String  @unique
+  ethAddress  String? @unique
+  fid         Int     @unique
 }
 
 model FarcasterNotificationToken {

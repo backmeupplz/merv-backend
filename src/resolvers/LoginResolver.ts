@@ -40,7 +40,6 @@ export default class LoginResolver {
     const { farcaster, wallet } = await privy.getUserById(verifiedToken.userId)
 
     if (!farcaster) throw new GraphQLError('No social data provided')
-    if (!wallet) throw new GraphQLError('No wallet data provided')
 
     const avatar = farcaster.pfp || null
     const fid = farcaster.fid
@@ -104,7 +103,7 @@ export default class LoginResolver {
           passId: latestPassId ? latestPassId.passId + 1 : 1,
           pfpUrl: avatar,
           fid,
-          ethAddress: wallet.address,
+          ethAddress: wallet?.address,
         },
       })
       return user

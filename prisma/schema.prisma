@@ -20,22 +20,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   id        String   @id @default(cuid())
-  username  String   @unique
-  passId    Int
-  pfpUrl    String?
+  fid       Int      @unique
 
-  // Tokens
   /// @TypeGraphQL.omit(output: true, input: true)
   authTokens                  AuthToken[]
   /// @TypeGraphQL.omit(output: true, input: true)
   farcasterNotificationTokens FarcasterNotificationToken[]
-  /// @TypeGraphQL.omit(output: true, input: true)
-  apiKeys                     ApiKey[]
-
-  // Privy fields
-  privyUserId String  @unique
-  ethAddress  String? @unique
-  fid         Int     @unique
 }
 
 model FarcasterNotificationToken {
@@ -58,19 +48,6 @@ model AuthToken {
   userAgent String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-
-  @@index([token])
-}
-
-model ApiKey {
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  lastUsedAt DateTime?
-  id         String    @id @default(uuid())
-  token      String /// @zod.custom.use(z.string().refine(validator.isJWT))
-  userAgent  String
-  user       User?     @relation(fields: [userId], references: [id])
-  userId     String
 
   @@index([token])
 }

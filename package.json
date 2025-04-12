@@ -28,9 +28,8 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@farcaster/frame-node": "^0.0.18",
+    "@farcaster/auth-client": "^0.3.0",
     "@prisma/client": "^5.18.0",
-    "@privy-io/server-auth": "^1.18.9",
     "class-validator": "^0.14.1",
     "core-js": "^3.40.0",
     "dotenv": "^16.4.7",

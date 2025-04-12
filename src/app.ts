@@ -53,15 +53,11 @@ const yoga = createYoga({
 
     const user = await prismaClient.user.findFirst({
       where: {
-        OR: [
-          {
-            authTokens: {
-              some: {
-                token,
-              },
-            },
+        authTokens: {
+          some: {
+            token,
           },
-        ],
+        },
       },
     })
 

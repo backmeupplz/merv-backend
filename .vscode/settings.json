@@ -9,6 +9,6 @@
   },
   "eslint.enable": true,
   "eslint.validate": ["typescript", "typescriptreact"],
-  "cSpell.words": ["Merv", "merving", "solana", "typegraphql"],
+  "cSpell.words": ["Merv", "merving", "solana", "typegraphql", "viem"],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

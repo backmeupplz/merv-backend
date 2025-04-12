@@ -33,7 +33,7 @@ export default async function handleFarcasterWebhook(req: Request) {
         },
       })
       void reportToTelegram(
-        `User ${user.username} has ${event.event === 'frame_removed' ? 'removed the frame' : 'disabled the notifications'} for Farcaster`,
+        `User ${user.fid} has ${event.event === 'frame_removed' ? 'removed the frame' : 'disabled the notifications'} for Farcaster`,
       )
     } else if (
       event.event === 'notifications_enabled' ||
@@ -60,7 +60,7 @@ export default async function handleFarcasterWebhook(req: Request) {
         console.log('No notification details found:', event)
       }
       void reportToTelegram(
-        `User ${user.username} has ${event.event === 'frame_added' ? 'added the frame' : 'enabled the notifications'} for Farcaster (notifications: ${event.notificationDetails ? 'enabled' : 'disabled'})`,
+        `User ${user.fid} has ${event.event === 'frame_added' ? 'added the frame' : 'enabled the notifications'} for Farcaster (notifications: ${event.notificationDetails ? 'enabled' : 'disabled'})`,
       )
     }
     return new Response('OK', { status: 200 })

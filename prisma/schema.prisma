@@ -17,10 +17,11 @@ datasource db {
 }
 
 model User {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        String   @id @default(cuid())
-  fid       Int      @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  id            String   @id @default(cuid())
+  fid           Int      @unique
+  unclaimedMerv Float    @default(0)
 
   /// @TypeGraphQL.omit(output: true, input: true)
   authTokens                  AuthToken[]

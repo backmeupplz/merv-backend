@@ -30,6 +30,7 @@
   "dependencies": {
     "@farcaster/auth-client": "^0.3.0",
     "@farcaster/frame-node": "^0.0.20",
+    "@farcaster/hub-nodejs": "^0.13.0",
     "@prisma/client": "^5.18.0",
     "class-validator": "^0.14.1",
     "core-js": "^3.40.0",

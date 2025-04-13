@@ -9,6 +9,14 @@
   },
   "eslint.enable": true,
   "eslint.validate": ["typescript", "typescriptreact"],
-  "cSpell.words": ["Merv", "merving", "solana", "typegraphql", "viem"],
+  "cSpell.words": [
+    "deeplink",
+    "Merv",
+    "merving",
+    "solana",
+    "typegraphql",
+    "viem",
+    "Warpcast"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

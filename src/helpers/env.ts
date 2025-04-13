@@ -11,4 +11,6 @@ export default cleanEnv(process.env, {
   POSTGRES: str(),
   JWT_SECRET: str(),
   TELEGRAM_BOT_TOKEN: str(),
+  APP_FID: str(),
+  APP_MNEMONIC: str(),
 })

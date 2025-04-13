@@ -21,6 +21,8 @@ class LoginParams {
   signature!: `0x${string}`
   @Field()
   nonce!: string
+  @Field()
+  domain!: string
 }
 
 @ObjectType()
@@ -36,7 +38,7 @@ export default class LoginResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Args()
-    { message, signature, nonce }: LoginParams,
+    { message, signature, nonce, domain }: LoginParams,
     @Ctx() { prisma, req }: Context,
   ) {
     // Verify the signature
@@ -46,7 +48,7 @@ export default class LoginResolver {
     const { success, fid } = await appClient.verifySignInMessage({
       message,
       signature,
-      domain: 'merv.fun',
+      domain,
       nonce,
     })
     if (!success) {

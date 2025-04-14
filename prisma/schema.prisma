@@ -31,6 +31,10 @@ model User {
   signerRequests              SignerRequest[]
   /// @TypeGraphQL.omit(output: true, input: true)
   signers                     Signer[]
+
+  signersRewarded Signer[] @relation("castRewardUser")
+
+  rewards MervReward[]
 }
 
 model FarcasterNotificationToken {
@@ -89,4 +93,23 @@ model Signer {
   ownerId    String
   /// @TypeGraphQL.omit(output: true, input: true)
   privateKey String
+
+  castCompleted    Boolean @default(false)
+  castRewardUser   User?   @relation("castRewardUser", fields: [castRewardUserId], references: [id], onDelete: Cascade)
+  castRewardUserId String?
+}
+
+enum RewardType {
+  CAST
+}
+
+model MervReward {
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  id        String     @id @default(cuid())
+  type      RewardType
+  amount    Float
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 }

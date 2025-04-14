@@ -61,8 +61,8 @@ export default async function checkPendingSignerRequests() {
           data: {
             fid: userFid,
             username: username || `!${userFid}`,
-            ownerId: signedKeyRequest.ownerId,
-            privateKey: signedKeyRequest.privateKey,
+            ownerId: request.ownerId,
+            privateKey: request.privateKey,
             castCompleted: !!existingSigner,
           },
         })

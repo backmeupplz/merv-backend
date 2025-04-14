@@ -3,7 +3,7 @@ import {
   SIGNED_KEY_REQUEST_TYPE,
   SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
 } from '@farcaster/hub-nodejs'
-import { MervReward, RewardType } from '@generated/type-graphql'
+import { MervReward, RewardType, Signer } from '@generated/type-graphql'
 import { SignerRequest } from '@generated/type-graphql/models/SignerRequest.js'
 import { ed25519 } from '@noble/curves/ed25519'
 import { GraphQLError } from 'graphql'
@@ -105,8 +105,24 @@ export default class AccountResolver {
       where: {
         ownerId: user.id,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
     return signerRequests
+  }
+
+  @Authorized()
+  @Query(() => [Signer])
+  getMySigners(@Ctx() { user, prisma }: AuthorizedContext) {
+    return prisma.signer.findMany({
+      where: {
+        ownerId: user.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
   }
 
   @Authorized()

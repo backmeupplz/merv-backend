@@ -51,12 +51,19 @@ export default async function checkPendingSignerRequests() {
           continue
         }
         const username = userData.userDataBody?.value
+        const existingSigner = await prismaClient.signer.findFirst({
+          where: {
+            fid: userFid,
+            castCompleted: true,
+          },
+        })
         await prismaClient.signer.create({
           data: {
             fid: userFid,
             username: username || `!${userFid}`,
             ownerId: signedKeyRequest.ownerId,
             privateKey: signedKeyRequest.privateKey,
+            castCompleted: !!existingSigner,
           },
         })
       }

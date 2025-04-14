@@ -2,6 +2,7 @@ import 'core-js'
 import 'reflect-metadata'
 
 import { spawn } from 'bun'
+import checkPendingSignerRequests from 'helpers/checkPendingSignerRequests'
 
 const cpus = navigator.hardwareConcurrency
 const buns = new Array(cpus)
@@ -18,6 +19,11 @@ for (let i = 0; i < cpus; i++) {
 }
 
 console.log('All buns started')
+
+setInterval(async () => {
+  await checkPendingSignerRequests()
+}, 10_000)
+console.log('Checking pending signer requests every 10 seconds started')
 
 function kill() {
   console.log('Killing all buns')

@@ -1,12 +1,19 @@
 import {
+  CastType,
   SIGNED_KEY_REQUEST_TYPE,
   SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
 } from '@farcaster/hub-nodejs'
+import { MervReward, RewardType } from '@generated/type-graphql'
 import { SignerRequest } from '@generated/type-graphql/models/SignerRequest.js'
 import { ed25519 } from '@noble/curves/ed25519'
 import { GraphQLError } from 'graphql'
-import { SIGNER_REQUEST_DEADLINE, WARPCAST_API } from 'helpers/constants'
+import {
+  CAST_REWARD,
+  SIGNER_REQUEST_DEADLINE,
+  WARPCAST_API,
+} from 'helpers/constants'
 import env from 'helpers/env'
+import { publishCast } from 'helpers/hub'
 import { type AuthorizedContext } from 'models/Context.js'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { toHex } from 'viem'
@@ -100,5 +107,81 @@ export default class AccountResolver {
       },
     })
     return signerRequests
+  }
+
+  @Authorized()
+  @Mutation(() => MervReward)
+  async claimMervReward(
+    @Ctx() { user, prisma }: AuthorizedContext,
+    @Arg('signerId') signerId: string,
+  ) {
+    return prisma.$transaction(async (tx) => {
+      // Check if there's a signer
+      const signer = await tx.signer.findFirst({
+        where: {
+          id: signerId,
+          ownerId: user.id,
+          castCompleted: false,
+        },
+      })
+      if (!signer) {
+        throw new GraphQLError('No signer found')
+      }
+      // Check if signer was already used for the reward
+      const castCompletedSigner = await tx.signer.findFirst({
+        where: {
+          fid: signer.fid,
+          castCompleted: true,
+        },
+      })
+      if (castCompletedSigner) {
+        throw new GraphQLError('This account already claimed the reward!')
+      }
+      // Cast the message
+      await publishCast({
+        data: {
+          text: `It's merving time! I got 1 $merv for this cast, you can get one, too! Open the mini-app to learn more ❤️`,
+          embeds: [
+            {
+              url: `https://merv.fun`,
+            },
+          ],
+          mentions: [],
+          embedsDeprecated: [],
+          mentionsPositions: [],
+          type: CastType.CAST,
+        },
+        fid: signer.fid,
+        signerPrivateKey: signer.privateKey as `0x${string}`,
+      })
+      // Update the signer to mark it as completed
+      await tx.signer.updateMany({
+        where: {
+          fid: signer.fid,
+        },
+        data: {
+          castCompleted: true,
+        },
+      })
+      // Create merv reward
+      const mervReward = await tx.mervReward.create({
+        data: {
+          type: RewardType.CAST,
+          amount: CAST_REWARD,
+          userId: user.id,
+        },
+      })
+      await tx.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          unclaimedMerv: {
+            increment: CAST_REWARD,
+          },
+        },
+      })
+      return mervReward
+    })
   }
 }

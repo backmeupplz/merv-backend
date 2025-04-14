@@ -14,6 +14,7 @@ import {
 } from 'helpers/constants'
 import env from 'helpers/env'
 import { publishCast } from 'helpers/hub'
+import reportToTelegram from 'helpers/reportToTelegram'
 import { type AuthorizedContext } from 'models/Context.js'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { toHex } from 'viem'
@@ -197,6 +198,9 @@ export default class AccountResolver {
           },
         },
       })
+      void reportToTelegram(
+        `User ${user.fid} claimed a merv reward of ${CAST_REWARD} for signing with ${signer.username}`,
+      )
       return mervReward
     })
   }

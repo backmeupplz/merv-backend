@@ -156,7 +156,7 @@ export default class AccountResolver {
       // Cast the message
       await publishCast({
         data: {
-          text: `It's merving time! I got 1 $merv for this cast, you can get one, too! Open the mini-app to learn more ❤️\n\n—sent from merv`,
+          text: `It's merving time! I got 1 $merv for this cast, you can get one, too! Open the mini-app to learn more ❤️\n\n𝓈ℯ𝓃𝓉 𝒻𝓇ℴ𝓂 𝓂ℯ𝓇𝓋`,
           embeds: [
             {
               url: `https://merv.fun`,

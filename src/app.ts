@@ -84,7 +84,7 @@ const yoga = createYoga({
       throw new GraphQLError('Invalid token')
     }
 
-    await prismaClient.apiKey.update({
+    await prismaClient.apiKey.updateMany({
       where: {
         token,
       },

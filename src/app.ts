@@ -6,7 +6,7 @@ import {
   GraphQLDeferDirective,
   GraphQLStreamDirective,
 } from '@graphql-tools/utils'
-import { GraphQLIncludeDirective } from 'graphql'
+import { GraphQLError, GraphQLIncludeDirective } from 'graphql'
 import { createYoga, type YogaInitialContext } from 'graphql-yoga'
 import env from 'helpers/env'
 import handleFarcasterWebhook from 'helpers/handleFarcasterWebhook'
@@ -59,11 +59,35 @@ const yoga = createYoga({
 
     const user = await prismaClient.user.findFirst({
       where: {
-        authTokens: {
-          some: {
-            token,
+        OR: [
+          {
+            authTokens: {
+              some: {
+                token,
+              },
+            },
           },
-        },
+          {
+            apiKeys: {
+              some: {
+                token,
+              },
+            },
+          },
+        ],
+      },
+    })
+
+    if (!user) {
+      throw new GraphQLError('Invalid token')
+    }
+
+    await prismaClient.apiKey.update({
+      where: {
+        token,
+      },
+      data: {
+        lastUsedAt: new Date(),
       },
     })
 

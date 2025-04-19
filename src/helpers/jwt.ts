@@ -3,7 +3,10 @@ import env from 'helpers/env.js'
 import jwt from 'jsonwebtoken'
 
 export function getAuthToken(user: User) {
-  return jwt.sign({ userId: user.id }, env.JWT_SECRET)
+  return jwt.sign(
+    { userId: user.id, createdAt: new Date().getTime() },
+    env.JWT_SECRET,
+  )
 }
 
 export function verifyAuthToken(jwtString: string) {

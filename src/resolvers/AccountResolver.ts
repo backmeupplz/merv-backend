@@ -3,7 +3,7 @@ import {
   SIGNED_KEY_REQUEST_TYPE,
   SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN,
 } from '@farcaster/hub-nodejs'
-import { MervReward, RewardType, Signer } from '@generated/type-graphql'
+import { ApiKey, MervReward, RewardType, Signer } from '@generated/type-graphql'
 import { SignerRequest } from '@generated/type-graphql/models/SignerRequest.js'
 import { ed25519 } from '@noble/curves/ed25519'
 import { GraphQLError } from 'graphql'
@@ -14,6 +14,7 @@ import {
 } from 'helpers/constants'
 import env from 'helpers/env'
 import { publishCast } from 'helpers/hub'
+import { getAuthToken } from 'helpers/jwt'
 import reportToTelegram from 'helpers/reportToTelegram'
 import { type AuthorizedContext } from 'models/Context.js'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
@@ -203,5 +204,55 @@ export default class AccountResolver {
       )
       return mervReward
     })
+  }
+
+  @Authorized()
+  @Mutation(() => ApiKey)
+  async createApiKey(@Ctx() { user, prisma, req }: AuthorizedContext) {
+    const apiKey = await prisma.apiKey.create({
+      data: {
+        userId: user.id,
+        token: getAuthToken(user),
+        userAgent: req?.headers['user-agent'] || 'Unknown',
+      },
+    })
+    return apiKey
+  }
+
+  @Authorized()
+  @Query(() => [ApiKey])
+  async getMyApiKeys(@Ctx() { user, prisma }: AuthorizedContext) {
+    const apiKeys = await prisma.apiKey.findMany({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    return apiKeys
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async deleteApiKey(
+    @Ctx() { user, prisma }: AuthorizedContext,
+    @Arg('id') id: string,
+  ) {
+    const apiKey = await prisma.apiKey.findFirst({
+      where: {
+        id,
+        userId: user.id,
+      },
+    })
+    if (!apiKey) {
+      throw new GraphQLError('No API key found')
+    }
+    await prisma.apiKey.delete({
+      where: {
+        id,
+      },
+    })
+    return true
   }
 }

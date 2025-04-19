@@ -14,6 +14,7 @@ import { verifyAuthToken } from 'helpers/jwt.js'
 import prismaClient from 'helpers/prismaClient.js'
 import type Context from 'models/Context.js'
 import AccountResolver from 'resolvers/AccountResolver'
+import CastResolver from 'resolvers/CastResolver'
 import LoginResolver from 'resolvers/LoginResolver.js'
 import UserResolver from 'resolvers/UserResolver.js'
 import { buildSchema } from 'type-graphql'
@@ -32,6 +33,7 @@ const schema = await buildSchema({
     LoginResolver,
     UserResolver,
     AccountResolver,
+    CastResolver,
   ],
   validate: true,
 })

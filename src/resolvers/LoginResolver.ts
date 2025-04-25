@@ -17,7 +17,7 @@ import {
 class LoginParams {
   @Field()
   message!: string
-  @Field()
+  @Field(() => String)
   signature!: `0x${string}`
   @Field()
   nonce!: string

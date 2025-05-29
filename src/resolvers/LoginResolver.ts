@@ -48,14 +48,16 @@ export default class LoginResolver {
         rpcUrl: env.RPC_URL,
       }),
     })
-    const { success, fid } = await appClient.verifySignInMessage({
+    const result = await appClient.verifySignInMessage({
       acceptAuthAddress: true,
       message,
       signature,
       domain,
       nonce,
     })
+    const { success, fid } = result
     if (!success) {
+      console.log('Invalid sig error:', JSON.stringify(result, null, 2))
       throw new GraphQLError('Invalid signature')
     }
     // Login

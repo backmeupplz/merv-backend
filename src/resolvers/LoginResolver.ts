@@ -55,10 +55,12 @@ export default class LoginResolver {
       domain,
       nonce,
     })
-    const { success, fid } = result
-    if (!success) {
+    const { fid, error } = result
+    if (error) {
       console.log('Invalid sig error:', JSON.stringify(result, null, 2))
-      throw new GraphQLError('Invalid signature')
+      throw new GraphQLError(
+        `Invalid signature (${error ? error.name : 'Unknown error'})`,
+      )
     }
     // Login
     return prisma.$transaction(async (tx) => {

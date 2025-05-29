@@ -13,6 +13,7 @@ import {
 import { SignerRequest } from '@generated/type-graphql/models/SignerRequest.js'
 import { ed25519 } from '@noble/curves/ed25519'
 import { GraphQLError } from 'graphql'
+import basePublicClient from 'helpers/basePublicClient'
 import {
   CAST_REWARD,
   FARCASTER_API,
@@ -26,8 +27,9 @@ import { getAuthToken } from 'helpers/jwt'
 import reportToTelegram from 'helpers/reportToTelegram'
 import { type AuthorizedContext } from 'models/Context.js'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-import { toHex } from 'viem'
-import { mnemonicToAccount } from 'viem/accounts'
+import { createWalletClient, erc20Abi, http, parseUnits, toHex } from 'viem'
+import { mnemonicToAccount, privateKeyToAccount } from 'viem/accounts'
+import { base } from 'viem/chains'
 
 @Resolver()
 export default class AccountResolver {
@@ -169,7 +171,6 @@ export default class AccountResolver {
       console.log(
         `Claiming pro reward for user ${user.fid} with signer ${signer.username} (${signer.fid})`,
       )
-      // Todo: check if neynar score is >= 0.55
       // Check neynar score
       const users = await getNeynarUsers([signer.fid])
       const neynarUser = users.find((u) => u.fid === signer.fid)
@@ -189,6 +190,9 @@ export default class AccountResolver {
           text: `I ratify /merv and am ready for the free $PRO!❤️\n\n𝓈ℯ𝓃𝓉 𝒻𝓇ℴ𝓂 𝓂ℯ𝓇𝓋`,
           embeds: [
             {
+              url: 'https://farcaster.xyz/farcasteradmin.eth/0xd9fa37d6',
+            },
+            {
               url: `https://merv.fun`,
             },
           ],
@@ -204,14 +208,14 @@ export default class AccountResolver {
         `Cast published for user ${user.fid} with signer ${signer.username} (${signer.fid})`,
       )
       // Update the signer to mark it as completed
-      // await tx.signer.updateMany({
-      //   where: {
-      //     fid: signer.fid,
-      //   },
-      //   data: {
-      //     proCastCompleted: true,
-      //   },
-      // })
+      await tx.signer.updateMany({
+        where: {
+          fid: signer.fid,
+        },
+        data: {
+          proCastCompleted: true,
+        },
+      })
       // Create pro reward
       const proReward = await tx.proReward.create({
         data: {
@@ -221,28 +225,28 @@ export default class AccountResolver {
         },
       })
       // Create tx to send the pro reward
-      // const proAccount = privateKeyToAccount(env.PRO_WALLET_KEY)
-      // const proWallet = createWalletClient({
-      //   account: proAccount,
-      //   chain: base,
-      //   transport: http(),
-      // })
+      const proAccount = privateKeyToAccount(env.PRO_WALLET_KEY)
+      const proWallet = createWalletClient({
+        account: proAccount,
+        chain: base,
+        transport: http(),
+      })
       if (!neynarUser.verified_addresses.primary?.eth_address) {
         throw new GraphQLError('User does not have a verified Ethereum address')
       }
-      // const transferTx = await proWallet.writeContract({
-      //   abi: erc20Abi,
-      //   address: '0xf65c3c30dd36b508e29a538b79b21e9b9e504e6c',
-      //   functionName: 'transferFrom',
-      //   args: [
-      //     '0xbf74483DB914192bb0a9577f3d8Fb29a6d4c08eE',
-      //     neynarUser.verified_addresses.primary?.eth_address,
-      //     parseUnits(PRO_CAST_REWARD.toString(), 18),
-      //   ],
-      // })
-      // await basePublicClient.waitForTransactionReceipt({
-      //   hash: transferTx,
-      // })
+      const transferTx = await proWallet.writeContract({
+        abi: erc20Abi,
+        address: '0xf65c3c30dd36b508e29a538b79b21e9b9e504e6c',
+        functionName: 'transferFrom',
+        args: [
+          '0xbf74483DB914192bb0a9577f3d8Fb29a6d4c08eE',
+          neynarUser.verified_addresses.primary?.eth_address,
+          parseUnits(PRO_CAST_REWARD.toString(), 18),
+        ],
+      })
+      await basePublicClient.waitForTransactionReceipt({
+        hash: transferTx,
+      })
       // Cast about the pro reward
       const mervSigner = await tx.signer.findFirst({
         where: {

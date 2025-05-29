@@ -1,5 +1,5 @@
 import { SignerRequestStatus } from '@prisma/client'
-import { SIGNER_REQUEST_DEADLINE, WARPCAST_API } from 'helpers/constants'
+import { FARCASTER_API, SIGNER_REQUEST_DEADLINE } from 'helpers/constants'
 import { getUserUsername } from 'helpers/hub'
 import prismaClient from 'helpers/prismaClient'
 
@@ -28,7 +28,7 @@ export default async function checkPendingSignerRequests() {
   for (const request of pendingSignerRequests) {
     try {
       const pollRes = await fetch(
-        `${WARPCAST_API}/v2/signed-key-request?token=${encodeURIComponent(request.token)}`,
+        `${FARCASTER_API}/v2/signed-key-request?token=${encodeURIComponent(request.token)}`,
       )
       if (!pollRes.ok) {
         throw new Error(`Polling error: ${pollRes.statusText}`)

@@ -15,8 +15,7 @@
     "merving",
     "solana",
     "typegraphql",
-    "viem",
-    "Warpcast"
+    "viem"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -9,8 +9,8 @@ import { ed25519 } from '@noble/curves/ed25519'
 import { GraphQLError } from 'graphql'
 import {
   CAST_REWARD,
+  FARCASTER_API,
   SIGNER_REQUEST_DEADLINE,
-  WARPCAST_API,
 } from 'helpers/constants'
 import env from 'helpers/env'
 import { publishCast } from 'helpers/hub'
@@ -55,23 +55,26 @@ export default class AccountResolver {
       },
     })
 
-    // Step 3: Create a signed key request via the Warpcast API
-    const warpcastRes = await fetch(`${WARPCAST_API}/v2/signed-key-requests`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        key,
-        requestFid: env.APP_FID,
-        signature,
-        deadline,
-        redirectUrl: 'https://warpcast.com/~/mini-apps/launch?domain=merv.fun',
-      }),
-    })
-    if (!warpcastRes.ok) {
-      throw new GraphQLError(`Warpcast API error: ${warpcastRes.statusText}`)
+    // Step 3: Create a signed key request via the Farcaster API
+    const farcasterRes = await fetch(
+      `${FARCASTER_API}/v2/signed-key-requests`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          key,
+          requestFid: env.APP_FID,
+          signature,
+          deadline,
+          redirectUrl: 'https://farcaster.xyz/miniapps/5HjQbj18YBrE/merv',
+        }),
+      },
+    )
+    if (!farcasterRes.ok) {
+      throw new GraphQLError(`Farcaster API error: ${farcasterRes.statusText}`)
     }
-    const warpcastJson = await warpcastRes.json()
-    const { token, deeplinkUrl } = warpcastJson.result.signedKeyRequest
+    const farcasterJson = await farcasterRes.json()
+    const { token, deeplinkUrl } = farcasterJson.result.signedKeyRequest
     return prisma.signerRequest.create({
       data: {
         ownerId: user.id,

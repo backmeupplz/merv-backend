@@ -46,6 +46,7 @@ export default class LoginResolver {
       ethereum: viemConnector(),
     })
     const { success, fid } = await appClient.verifySignInMessage({
+      acceptAuthAddress: true,
       message,
       signature,
       domain,

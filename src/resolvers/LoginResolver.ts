@@ -1,6 +1,7 @@
 import { createAppClient, viemConnector } from '@farcaster/auth-client'
 import { User } from '@generated/type-graphql/models/User.js'
 import { GraphQLError } from 'graphql'
+import env from 'helpers/env'
 import { getAuthToken } from 'helpers/jwt'
 import type Context from 'models/Context.js'
 import {
@@ -43,7 +44,9 @@ export default class LoginResolver {
   ) {
     // Verify the signature
     const appClient = createAppClient({
-      ethereum: viemConnector(),
+      ethereum: viemConnector({
+        rpcUrl: env.RPC_URL,
+      }),
     })
     const { success, fid } = await appClient.verifySignInMessage({
       acceptAuthAddress: true,

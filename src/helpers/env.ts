@@ -13,4 +13,5 @@ export default cleanEnv(process.env, {
   TELEGRAM_BOT_TOKEN: str(),
   APP_FID: str(),
   APP_MNEMONIC: str(),
+  RPC_URL: str(),
 })

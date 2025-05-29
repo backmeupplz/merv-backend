@@ -244,9 +244,12 @@ export default class AccountResolver {
           parseUnits(PRO_CAST_REWARD.toString(), 18),
         ],
       })
-      await basePublicClient.waitForTransactionReceipt({
+      const status = await basePublicClient.waitForTransactionReceipt({
         hash: transferTx,
       })
+      console.log(
+        `Transfer of ${PRO_CAST_REWARD} $PRO to ${neynarUser.verified_addresses.primary?.eth_address} completed with status: ${status.status}`,
+      )
       // Cast about the pro reward
       const mervSigner = await tx.signer.findFirst({
         where: {

@@ -158,6 +158,9 @@ export default class AccountResolver {
       if (castCompletedSigner) {
         throw new GraphQLError('This account already claimed the reward!')
       }
+      console.log(
+        `Claiming merv reward for user ${user.fid} with signer ${signer.username} (${signer.fid})`,
+      )
       // Cast the message
       await publishCast({
         data: {
@@ -175,6 +178,9 @@ export default class AccountResolver {
         fid: signer.fid,
         signerPrivateKey: signer.privateKey as `0x${string}`,
       })
+      console.log(
+        `Cast published for user ${user.fid} with signer ${signer.username} (${signer.fid})`,
+      )
       // Update the signer to mark it as completed
       await tx.signer.updateMany({
         where: {

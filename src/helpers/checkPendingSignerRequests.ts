@@ -8,6 +8,7 @@ export default async function checkPendingSignerRequests() {
   if (isFetching) {
     return
   }
+  console.log('Checking pending signer requests...')
   isFetching = true
   await prismaClient.signerRequest.updateMany({
     where: {
@@ -25,17 +26,24 @@ export default async function checkPendingSignerRequests() {
       status: SignerRequestStatus.PENDING,
     },
   })
+  console.log(
+    `Found ${pendingSignerRequests.length} pending signer requests to process.`,
+  )
   for (const request of pendingSignerRequests) {
+    console.log('Processing request:', request.id)
     try {
       const pollRes = await fetch(
         `${FARCASTER_API}/v2/signed-key-request?token=${encodeURIComponent(request.token)}`,
       )
+      console.log('Polling signed key request:', request.id)
+      console.log('Polling status ok:', JSON.stringify(pollRes.ok))
       if (!pollRes.ok) {
         throw new Error(`Polling error: ${pollRes.statusText}`)
       }
       const pollJson = await pollRes.json()
       const { signedKeyRequest } = pollJson.result
       const { state, userFid } = signedKeyRequest
+      console.log('Signed key request state:', state, 'for fid:', userFid)
       if (state === 'completed') {
         await prismaClient.signerRequest.update({
           where: {

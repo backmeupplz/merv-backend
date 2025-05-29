@@ -57,13 +57,12 @@ export default async function checkPendingSignerRequests() {
         console.log(
           `Signer request ${request.id} marked as signed for fid ${userFid}`,
         )
-        const userData = await getUserUsername(userFid)
-        console.log('Fetched user data:', userData)
-        if (!userData) {
+        const username = await getUserUsername(userFid)
+        console.log('Fetched username:', username)
+        if (!username) {
           console.error('Username data not found for fid:', userFid)
           continue
         }
-        const username = userData.userDataBody?.value
         console.log('Fetched username:', username, 'for fid:', userFid)
         const existingSigner = await prismaClient.signer.findFirst({
           where: {

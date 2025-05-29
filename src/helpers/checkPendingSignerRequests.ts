@@ -74,6 +74,9 @@ export default async function checkPendingSignerRequests() {
             castCompleted: !!existingSigner,
           },
         })
+        console.log(
+          `Signer request ${request.id} completed for fid ${userFid} (${username || `!${userFid}`})`,
+        )
       }
     } catch (error) {
       console.error('Error polling signed key request:', request.id, error)

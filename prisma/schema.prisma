@@ -34,9 +34,11 @@ model User {
   /// @TypeGraphQL.omit(output: true, input: true)
   signers                     Signer[]
 
-  signersRewarded Signer[] @relation("castRewardUser")
+  signersRewarded    Signer[] @relation("castRewardUser")
+  proSignersRewarded Signer[] @relation("proCastRewardUser")
 
-  rewards MervReward[]
+  rewards    MervReward[]
+  proRewards ProReward[]
 }
 
 model FarcasterNotificationToken {
@@ -99,6 +101,10 @@ model Signer {
   castCompleted    Boolean @default(false)
   castRewardUser   User?   @relation("castRewardUser", fields: [castRewardUserId], references: [id], onDelete: Cascade)
   castRewardUserId String?
+
+  proCastCompleted    Boolean @default(false)
+  proCastRewardUser   User?   @relation("proCastRewardUser", fields: [proCastRewardUserId], references: [id], onDelete: Cascade)
+  proCastRewardUserId String?
 }
 
 enum RewardType {
@@ -106,6 +112,17 @@ enum RewardType {
 }
 
 model MervReward {
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  id        String     @id @default(cuid())
+  type      RewardType
+  amount    Float
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model ProReward {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   id        String     @id @default(cuid())

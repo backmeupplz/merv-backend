@@ -14,4 +14,6 @@ export default cleanEnv(process.env, {
   APP_FID: str(),
   APP_MNEMONIC: str(),
   RPC_URL: str(),
+  NEYNAR_API_KEY: str(),
+  PRO_WALLET_KEY: str<`0x${string}`>(),
 })

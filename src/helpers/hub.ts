@@ -23,6 +23,7 @@ async function submitMessage(resultPromise: HubAsyncResult<Message>) {
       `Error submitting message to hub: ${messageSubmitResult.error}`,
     )
   }
+  return messageSubmitResult.value
 }
 
 export async function getUserUsername(fid: number) {
@@ -47,7 +48,7 @@ export async function publishCast({
 }) {
   const privateKeyBytes = fromHex(signerPrivateKey, 'bytes')
   const signer = new NobleEd25519Signer(privateKeyBytes)
-  await submitMessage(
+  const message = await submitMessage(
     makeCastAdd(
       data,
       {
@@ -59,5 +60,6 @@ export async function publishCast({
   )
   return {
     signerPrivateKey: signer,
+    message,
   }
 }

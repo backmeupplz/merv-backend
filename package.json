@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@farcaster/auth-client": "^0.6.0",
-    "@farcaster/frame-node": "^0.0.20",
+    "@farcaster/frame-node": "^0.0.31",
     "@farcaster/hub-nodejs": "^0.13.5",
     "@prisma/client": "^5.22.0",
     "class-validator": "^0.14.2",

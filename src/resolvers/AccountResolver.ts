@@ -24,10 +24,11 @@ import env from 'helpers/env'
 import getNeynarUsers from 'helpers/getNeynarUserScores'
 import { publishCast } from 'helpers/hub'
 import { getAuthToken } from 'helpers/jwt'
+import procoinAbi from 'helpers/procoinAbi'
 import reportToTelegram from 'helpers/reportToTelegram'
 import { type AuthorizedContext } from 'models/Context.js'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-import { createWalletClient, erc20Abi, http, parseUnits, toHex } from 'viem'
+import { createWalletClient, http, parseUnits, toHex } from 'viem'
 import { mnemonicToAccount, privateKeyToAccount } from 'viem/accounts'
 import { base } from 'viem/chains'
 
@@ -235,7 +236,7 @@ export default class AccountResolver {
         throw new GraphQLError('User does not have a verified Ethereum address')
       }
       const transferTx = await proWallet.writeContract({
-        abi: erc20Abi,
+        abi: procoinAbi,
         address: '0xf65c3c30dd36b508e29a538b79b21e9b9e504e6c',
         functionName: 'transferFrom',
         args: [

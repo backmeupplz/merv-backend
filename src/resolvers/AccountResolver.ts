@@ -188,7 +188,7 @@ export default class AccountResolver {
         message: { hash },
       } = await publishCast({
         data: {
-          text: `I ratify /merv and am ready for the free $PRO!❤️\n\n𝓈ℯ𝓃𝓉 𝒻𝓇ℴ𝓂 𝓂ℯ𝓇𝓋`,
+          text: `I ratify /merv and am ready for the free $PRO! ❤️\n\n𝓈ℯ𝓃𝓉 𝒻𝓇ℴ𝓂 𝓂ℯ𝓇𝓋`,
           embeds: [
             {
               url: 'https://farcaster.xyz/farcasteradmin.eth/0xd9fa37d6',

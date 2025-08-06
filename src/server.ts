@@ -4,7 +4,7 @@ import 'reflect-metadata'
 import { spawn } from 'bun'
 import checkPendingSignerRequests from 'helpers/checkPendingSignerRequests'
 
-const cpus = navigator.hardwareConcurrency
+const cpus = 1 // navigator.hardwareConcurrency
 const buns = new Array(cpus)
 
 console.log(`Starting ${cpus} buns`)
